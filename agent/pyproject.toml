@@ -11,3 +11,9 @@ dependencies = [
     "python-dotenv>=1.2.1",
     "uvicorn>=0.40.0",
 ]
+
+[dependency-groups]
+dev = [
+    "pyright>=1.1.408",
+    "ruff>=0.14.14",
+]
