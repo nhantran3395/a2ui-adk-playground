@@ -1,48 +1,46 @@
+import "dotenv/config";
 import { HttpAgent } from "@ag-ui/client";
-import {
-  CopilotRuntime,
-  ExperimentalEmptyAdapter,
-  copilotRuntimeNodeHttpEndpoint,
-} from "@copilotkit/runtime";
-import cors from "cors";
-import express from "express";
+import { CopilotRuntime, createCopilotEndpoint } from "@copilotkit/runtime/v2";
+import { serve } from "@hono/node-server";
+import { Hono } from "hono";
+import { cors } from "hono/cors";
 
 import { config } from "./config";
 
-const app = express();
+const app = new Hono();
 
 app.use(
+  "*",
   cors({
     origin: config.ALLOW_ORIGIN,
     credentials: true,
   }),
 );
 
-const serviceAdapter = new ExperimentalEmptyAdapter();
-
-app.post("/copilotkit", (req, res) => {
-  const runtime = new CopilotRuntime({
-    agents: {
-      // @ts-expect-error HttpAgent type mismatch is okay to be ignored
-      personal_assistant_agent: new HttpAgent({
-        url: config.AGENT_URL,
-      }),
-    },
-  });
-
-  const handler = copilotRuntimeNodeHttpEndpoint({
-    endpoint: "/copilotkit",
-    runtime,
-    serviceAdapter,
-  });
-
-  return handler(req, res);
+const runtime = new CopilotRuntime({
+  agents: {
+    // @ts-expect-error HttpAgent type mismatch can be safely ignored
+    personal_assistant_agent: new HttpAgent({
+      url: config.AGENT_URL,
+    }),
+  },
+  // runner: new InMemoryAgentRunner(),  // ← default, explicit if you want
 });
 
-app.get("/health", (_req, res) => {
-  res.json({ status: "ok" });
+const copilotApp = createCopilotEndpoint({
+  runtime,
+  basePath: "/copilotkit",
 });
 
-app.listen(config.PORT, () => {
-  console.log(`Runtime server listening at ${config.PORT}`);
+// Mount the CopilotKit routes
+app.route("/", copilotApp);
+
+app.get("/health", (c) => c.json({ status: "ok" }));
+
+const PORT = config.PORT;
+
+serve({ fetch: app.fetch, port: PORT }, (info) => {
+  console.log(
+    `Runtime server listening at http://localhost:${info.port}/copilotkit`,
+  );
 });
