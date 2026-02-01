@@ -1,10 +1,11 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import macros from "unplugin-parcel-macros";
+import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [macros.vite(), react()],
+  plugins: [macros.vite(), react(), tailwindcss()],
   build: {
     target: ["es2022"],
     // Lightning CSS produces a much smaller CSS bundle than the default minifier.
