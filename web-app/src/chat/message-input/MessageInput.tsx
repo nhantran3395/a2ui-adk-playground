@@ -1,5 +1,6 @@
-import { ActionButton, Button, Text, TextArea } from "@react-spectrum/s2";
+import { Button, Text, TextArea } from "@react-spectrum/s2";
 import SendIcon from "@react-spectrum/s2/icons/Send";
+import { style } from "@react-spectrum/s2/style" with { type: "macro" };
 
 export function MessageInput({
   value,
@@ -23,31 +24,20 @@ export function MessageInput({
 
   return (
     <div className="border-t border-gray-200 p-4">
-      <div className="max-w-3xl mx-auto">
-        <div className="relative flex items-end gap-2 bg-white border border-gray-300 rounded-2xl px-4 py-2 shadow-sm focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
+      <div className="max-w-5xl mx-auto flex flex-col gap-1 items-center">
+        <div className="w-4/5 relative flex items-center justify-center gap-2 bg-white border border-gray-300 rounded-2xl px-4 py-2 shadow-sm focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
           <TextArea
             aria-label="Message input"
             placeholder="Message..."
             value={value}
             onChange={onChange}
             onKeyDown={handleKeyDown}
+            UNSAFE_className="[&_[role=presentation]]:!border-none"
+            styles={style({
+              width: "full",
+            })}
           />
-          <div className="flex items-center gap-2 pb-1">
-            <ActionButton isQuiet aria-label="Attach file">
-              <svg
-                className="w-5 h-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
-                />
-              </svg>
-            </ActionButton>
+          <div className="flex items-center gap-2">
             <Button
               variant="accent"
               isDisabled={!value.trim() || isLoading}
@@ -58,7 +48,14 @@ export function MessageInput({
             </Button>
           </div>
         </div>
-        <Text>
+        <Text
+          styles={style({
+            font: "body-xs",
+            fontWeight: "normal",
+            textAlign: "center",
+            marginX: "auto",
+          })}
+        >
           AI can make mistakes. Consider checking important information.
         </Text>
       </div>

@@ -1,8 +1,9 @@
-import { ActionButton, Avatar, Text } from "@react-spectrum/s2";
+import { ActionButton, Text } from "@react-spectrum/s2";
 import CopyIcon from "@react-spectrum/s2/icons/Copy";
 import RefreshIcon from "@react-spectrum/s2/icons/Refresh";
 import ThumbDownIcon from "@react-spectrum/s2/icons/ThumbDown";
 import ThumbUpIcon from "@react-spectrum/s2/icons/ThumbUp";
+import UserIcon from "@react-spectrum/s2/icons/User";
 
 import { ToolCallDisplay } from "../tool-call";
 import { MessageContent } from "./MessageContent";
@@ -11,7 +12,7 @@ import type { Message, ToolCall } from "@copilotkit/shared";
 
 function ChatCenterLogo() {
   return (
-    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold shrink-0">
+    <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold shrink-0">
       ✦
     </div>
   );
@@ -26,7 +27,7 @@ export function ChatMessage({ message }: { message: Message }) {
             {typeof message.content === "string" ? message.content : ""}
           </Text>
         </div>
-        <Avatar src="https://i.pravatar.cc/100?img=12" alt="User" />
+        <UserIcon />
       </div>
     );
   }
