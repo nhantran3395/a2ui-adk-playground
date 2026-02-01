@@ -30,7 +30,6 @@ export function MessageInput({
             placeholder="Message..."
             value={value}
             onChange={onChange}
-            UNSAFE_className="flex-1 resize-none border-none focus:ring-0 bg-transparent"
             onKeyDown={handleKeyDown}
           />
           <div className="flex items-center gap-2 pb-1">
@@ -54,13 +53,12 @@ export function MessageInput({
               isDisabled={!value.trim() || isLoading}
               onPress={onSend}
               aria-label="Send message"
-              UNSAFE_className="rounded-full w-8 h-8 p-0 flex items-center justify-center"
             >
               <SendIcon />
             </Button>
           </div>
         </div>
-        <Text UNSAFE_className="text-xs text-gray-400 text-center mt-2 block">
+        <Text>
           AI can make mistakes. Consider checking important information.
         </Text>
       </div>

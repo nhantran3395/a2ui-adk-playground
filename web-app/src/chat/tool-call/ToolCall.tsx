@@ -34,12 +34,6 @@ export function ToolCallDisplay({
   toolCall: ToolCall;
   status: "pending" | "success" | "error";
 }) {
-  const statusColor =
-    status === "success"
-      ? "text-green-600"
-      : status === "error"
-      ? "text-red-600"
-      : "text-yellow-600";
   const statusText =
     status === "success"
       ? "Success"
@@ -66,15 +60,9 @@ export function ToolCallDisplay({
           {getToolIcon(toolCall.function.name)}
         </div>
         <div className="flex-1 min-w-0">
-          <Text UNSAFE_className="text-xs font-medium text-blue-600 block">
-            {getToolDisplayName(toolCall.function.name)}
-          </Text>
-          <Text UNSAFE_className="text-sm text-gray-700 truncate block">
-            "{getToolArgs(toolCall.function.arguments)}"
-          </Text>
-          <Text UNSAFE_className={`text-xs font-medium ${statusColor} block`}>
-            {statusText}
-          </Text>
+          <Text>{getToolDisplayName(toolCall.function.name)}</Text>
+          <Text>"{getToolArgs(toolCall.function.arguments)}"</Text>
+          <Text>{statusText}</Text>
         </div>
       </div>
     </div>

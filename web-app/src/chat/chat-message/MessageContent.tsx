@@ -44,11 +44,7 @@ export function MessageContent({ content }: { content: string }) {
     if (trimmed.startsWith("## ")) {
       flushList();
       elements.push(
-        <Heading
-          key={index}
-          level={3}
-          UNSAFE_className="text-lg font-semibold mt-4 mb-2"
-        >
+        <Heading key={index} level={3}>
           {trimmed.slice(3)}
         </Heading>,
       );
@@ -59,11 +55,7 @@ export function MessageContent({ content }: { content: string }) {
     if (trimmed.startsWith("# ")) {
       flushList();
       elements.push(
-        <Heading
-          key={index}
-          level={2}
-          UNSAFE_className="text-xl font-semibold mt-4 mb-2"
-        >
+        <Heading key={index} level={2}>
           {trimmed.slice(2)}
         </Heading>,
       );

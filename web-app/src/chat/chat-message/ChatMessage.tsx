@@ -9,6 +9,14 @@ import { MessageContent } from "./MessageContent";
 
 import type { Message, ToolCall } from "@copilotkit/shared";
 
+function ChatCenterLogo() {
+  return (
+    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold shrink-0">
+      ✦
+    </div>
+  );
+}
+
 export function ChatMessage({ message }: { message: Message }) {
   if (message.role === "user") {
     return (
@@ -32,13 +40,11 @@ export function ChatMessage({ message }: { message: Message }) {
 
     return (
       <div className="flex gap-3">
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold shrink-0">
-          ✦
-        </div>
+        <ChatCenterLogo />
         <div className="flex-1 space-y-4 max-w-3xl">
           {hasToolCalls && (
             <div>
-              <Text UNSAFE_className="text-xs text-purple-600 font-medium mb-2 flex items-center gap-1">
+              <Text>
                 <span className="text-purple-400">✦</span> ACTIVE TOOLS
               </Text>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

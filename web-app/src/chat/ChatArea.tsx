@@ -49,10 +49,8 @@ export function ChatArea() {
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">
                 ✦
               </div>
-              <Heading level={2} UNSAFE_className="text-2xl font-semibold mb-2">
-                How can I help you today?
-              </Heading>
-              <Text UNSAFE_className="text-gray-500">
+              <Heading level={2}>How can I help you today?</Heading>
+              <Text>
                 Ask me anything or start with one of these suggestions
               </Text>
             </div>
