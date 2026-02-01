@@ -1,22 +1,22 @@
-import {useAgent, useCopilotKit} from "@copilotkit/react-core/v2";
-import {Heading, Text} from "@react-spectrum/s2";
-import {useEffect, useRef, useState} from "react";
+import { useAgent, useCopilotKit } from "@copilotkit/react-core/v2";
+import { Heading, Text } from "@react-spectrum/s2";
+import { useEffect, useRef, useState } from "react";
 
-import {ChatHeader} from "./chat-header";
-import {ChatMessage} from "./chat-message/ChatMessage.tsx";
-import {MessageInput} from "./message-input";
+import { ChatHeader } from "./chat-header";
+import { ChatMessage } from "./chat-message/ChatMessage.tsx";
+import { MessageInput } from "./message-input";
 
 export function ChatArea() {
-  const {copilotkit} = useCopilotKit();
+  const { copilotkit } = useCopilotKit();
   const [userInput, setUserInput] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const {agent} = useAgent({
+  const { agent } = useAgent({
     agentId: "personal_assistant_agent",
   });
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -32,14 +32,14 @@ export function ChatArea() {
       content: userInput,
     });
     setUserInput("");
-    copilotkit.runAgent({agent});
+    copilotkit.runAgent({ agent });
   };
 
   const isLoading = agent.state === "thinking" || agent.state === "running";
   return (
     <div className="flex-1 flex flex-col h-full">
       {/* Header */}
-      <ChatHeader/>
+      <ChatHeader />
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-6">
@@ -53,9 +53,9 @@ export function ChatArea() {
             </div>
           )}
           {agent.messages.map((message) => (
-            <ChatMessage key={message.id} message={message}/>
+            <ChatMessage key={message.id} message={message} />
           ))}
-          <div ref={messagesEndRef}/>
+          <div ref={messagesEndRef} />
         </div>
       </div>
 

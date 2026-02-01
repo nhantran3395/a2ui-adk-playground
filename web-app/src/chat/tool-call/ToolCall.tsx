@@ -38,8 +38,8 @@ export function ToolCallDisplay({
     status === "success"
       ? "Success"
       : status === "error"
-      ? "Error"
-      : "Running...";
+        ? "Error"
+        : "Running...";
 
   const bgColor =
     toolCall.function.name.includes("search") ||
