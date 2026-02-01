@@ -1,6 +1,7 @@
-import type { ToolCall } from "@copilotkit/shared";
-import SearchIcon from "@react-spectrum/s2/icons/Search";
 import { Text } from "@react-spectrum/s2";
+import SearchIcon from "@react-spectrum/s2/icons/Search";
+
+import type { ToolCall } from "@copilotkit/shared";
 
 const getToolIcon = (name: string) => {
   if (name.includes("search") || name.includes("google")) {

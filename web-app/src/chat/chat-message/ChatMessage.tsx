@@ -1,12 +1,13 @@
-import type { Message, ToolCall } from "@copilotkit/shared";
 import { ActionButton, Avatar, Text } from "@react-spectrum/s2";
-import ThumbUpIcon from "@react-spectrum/s2/icons/ThumbUp";
-import ThumbDownIcon from "@react-spectrum/s2/icons/ThumbDown";
 import CopyIcon from "@react-spectrum/s2/icons/Copy";
 import RefreshIcon from "@react-spectrum/s2/icons/Refresh";
+import ThumbDownIcon from "@react-spectrum/s2/icons/ThumbDown";
+import ThumbUpIcon from "@react-spectrum/s2/icons/ThumbUp";
 
 import { ToolCallDisplay } from "../tool-call";
 import { MessageContent } from "./MessageContent";
+
+import type { Message, ToolCall } from "@copilotkit/shared";
 
 export function ChatMessage({ message }: { message: Message }) {
   if (message.role === "user") {

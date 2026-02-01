@@ -6,14 +6,13 @@ interface ChatHistoryItem {
   title: string;
 }
 
-// Mock chat history data
 const recentChats: ChatHistoryItem[] = [
   { id: "1", title: "Frontend UI Refactor" },
   { id: "2", title: "Marketing Strategy Q4" },
   { id: "3", title: "Weather App Logic" },
 ];
 
-export function Sidebar({ onNewChat }: { onNewChat: () => void }) {
+export function LeftSidebar({ onNewChat }: { onNewChat: () => void }) {
   return (
     <div className="w-64 bg-gray-50 border-r border-gray-200 flex flex-col h-full">
       {/* Logo */}
