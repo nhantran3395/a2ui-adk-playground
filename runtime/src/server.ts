@@ -1,6 +1,11 @@
 import "dotenv/config";
-import { HttpAgent } from "@ag-ui/client";
-import { CopilotRuntime, createCopilotEndpoint } from "@copilotkit/runtime/v2";
+import { A2AClient } from "@a2a-js/sdk/client";
+import { A2AAgent } from "@ag-ui/a2a";
+import {
+  CopilotRuntime,
+  createCopilotEndpoint,
+  InMemoryAgentRunner,
+} from "@copilotkit/runtime/v2";
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
@@ -17,14 +22,20 @@ app.use(
   }),
 );
 
+// Create A2A client to connect to the Python agent server
+const a2aClient = new A2AClient(config.AGENT_URL);
+
+// Create A2A agent with A2UI support
+// @ts-expect-error A2AClient type mismatch between package versions can be safely ignored
+const a2aAgent = new A2AAgent({ a2aClient });
+
 const runtime = new CopilotRuntime({
   agents: {
-    // @ts-expect-error HttpAgent type mismatch can be safely ignored
-    personal_assistant_agent: new HttpAgent({
-      url: config.AGENT_URL,
-    }),
+    // Use A2AAgent for proper A2UI protocol support
+    // @ts-expect-error Type mismatch between package versions can be safely ignored
+    personal_assistant_agent: a2aAgent,
   },
-  // runner: new InMemoryAgentRunner(),  // ← default, explicit if you want
+  runner: new InMemoryAgentRunner(),
 });
 
 const copilotApp = createCopilotEndpoint({

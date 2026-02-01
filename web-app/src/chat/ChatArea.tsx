@@ -1,4 +1,8 @@
-import { useAgent, useCopilotKit } from "@copilotkit/react-core/v2";
+import {
+  useAgent,
+  useCopilotKit,
+  useRenderActivityMessage,
+} from "@copilotkit/react-core/v2";
 import { Heading, Text } from "@react-spectrum/s2";
 import { useEffect, useRef, useState } from "react";
 
@@ -6,14 +10,33 @@ import { ChatHeader } from "./chat-header";
 import { ChatMessage } from "./chat-message/ChatMessage.tsx";
 import { MessageInput } from "./message-input";
 
+import type { ActivityMessage } from "@copilotkit/shared";
+
 export function ChatArea() {
   const { copilotkit } = useCopilotKit();
   const [userInput, setUserInput] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { renderActivityMessage } = useRenderActivityMessage();
 
   const { agent } = useAgent({
     agentId: "personal_assistant_agent",
   });
+
+  // Debug: Subscribe to agent events to see what's being received
+  useEffect(() => {
+    const subscription = agent.subscribe({
+      onNewMessage: ({ message }) => {
+        console.log("🆕 New message received:", message);
+      },
+      onActivitySnapshotEvent: ({ event }) => {
+        console.log("📸 Activity Snapshot Event:", event);
+      },
+      onActivityDeltaEvent: ({ event }) => {
+        console.log("📝 Activity Delta Event:", event);
+      },
+    });
+    return () => subscription.unsubscribe();
+  }, [agent]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -21,6 +44,12 @@ export function ChatArea() {
 
   useEffect(() => {
     scrollToBottom();
+    // Debug: log full messages to see activity messages
+    console.log("All messages:", agent.messages);
+    console.log(
+      "Message roles:",
+      agent.messages.map((m) => ({ id: m.id, role: m.role })),
+    );
   }, [agent.messages]);
 
   const onSendMessage = () => {
@@ -52,9 +81,18 @@ export function ChatArea() {
               </Text>
             </div>
           )}
-          {agent.messages.map((message) => (
-            <ChatMessage key={message.id} message={message} />
-          ))}
+          {agent.messages.map((message) => {
+            // Check if this is an activity message (A2UI)
+            if (message.role === "activity") {
+              return (
+                <div key={message.id} className="a2ui-activity-message">
+                  {renderActivityMessage(message as ActivityMessage)}
+                </div>
+              );
+            }
+            // Regular user/assistant message
+            return <ChatMessage key={message.id} message={message} />;
+          })}
           <div ref={messagesEndRef} />
         </div>
       </div>

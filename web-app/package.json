@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@a2ui/lit": "^0.8.1",
+    "@ag-ui/core": "^0.0.43",
+    "@copilotkit/a2ui-renderer": "^1.51.3",
     "@copilotkit/react-core": "^1.51.3",
     "@copilotkit/react-ui": "^1.51.3",
     "@react-spectrum/s2": "^1.0.0",
