@@ -5,10 +5,13 @@ import { useEffect, useRef, useState } from "react";
 import { ChatHeader } from "./chat-header";
 import { ChatMessage } from "./chat-message/ChatMessage.tsx";
 import { MessageInput } from "./message-input";
+import { PlanIndicator } from "./plan-indicator";
+import { PlanModal } from "./plan-modal";
 
 export function ChatArea() {
   const { copilotkit } = useCopilotKit();
   const [userInput, setUserInput] = useState<string>("");
+  const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { agent } = useAgent({
@@ -35,7 +38,9 @@ export function ChatArea() {
     copilotkit.runAgent({ agent });
   };
 
-  const isLoading = agent.state === "thinking" || agent.state === "running";
+  const isLoading = agent.isRunning;
+  const plan = agent.state?.plan ?? null;
+
   return (
     <div className="flex-1 flex flex-col h-full">
       {/* Header */}
@@ -59,12 +64,23 @@ export function ChatArea() {
         </div>
       </div>
 
+      {plan && (
+        <PlanIndicator
+          title={plan.title}
+          onOpen={() => setIsPlanModalOpen(true)}
+        />
+      )}
+
       <MessageInput
         value={userInput}
         onChange={setUserInput}
         onSend={onSendMessage}
         isLoading={isLoading}
       />
+
+      {isPlanModalOpen && plan && (
+        <PlanModal plan={plan} onClose={() => setIsPlanModalOpen(false)} />
+      )}
     </div>
   );
 }

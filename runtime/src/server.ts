@@ -1,6 +1,10 @@
 import "dotenv/config";
 import { HttpAgent } from "@ag-ui/client";
-import { CopilotRuntime, createCopilotEndpoint } from "@copilotkit/runtime/v2";
+import {
+  CopilotRuntime,
+  createCopilotEndpoint,
+  InMemoryAgentRunner,
+} from "@copilotkit/runtime/v2";
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
@@ -24,7 +28,7 @@ const runtime = new CopilotRuntime({
       url: config.AGENT_URL,
     }),
   },
-  // runner: new InMemoryAgentRunner(),  // ← default, explicit if you want
+  runner: new InMemoryAgentRunner(),
 });
 
 const copilotApp = createCopilotEndpoint({
@@ -32,7 +36,6 @@ const copilotApp = createCopilotEndpoint({
   basePath: "/copilotkit",
 });
 
-// Mount the CopilotKit routes
 app.route("/", copilotApp);
 
 app.get("/health", (c) => c.json({ status: "ok" }));

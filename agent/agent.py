@@ -1,4 +1,6 @@
+from google import genai
 from google.adk.agents import Agent
+from google.adk.tools import ToolContext
 
 
 def get_weather(location: str) -> dict:
@@ -29,13 +31,40 @@ def add_todo(task: str, priority: str = "medium") -> dict:
     }
 
 
+async def create_plan(
+    title: str,
+    content: str,
+    tool_context: ToolContext,
+) -> dict:
+    """Create or update a markdown plan. The content should be well-formatted markdown
+    with headings, bullet points, and numbered lists."""
+    artifact = genai.types.Part(
+        inline_data=genai.types.Blob(
+            mime_type="text/markdown",
+            data=content.encode("utf-8"),
+        )
+    )
+    version = await tool_context.save_artifact(
+        filename="plan.md",
+        artifact=artifact,
+    )
+    tool_context.state["plan"] = {
+        "title": title,
+        "content": content,
+        "version": version,
+    }
+    return {"status": "success", "message": f"Plan '{title}' created (v{version})"}
+
+
 # Define the root agent
 root_agent = Agent(
     name="personal_assistant_agent",
     model="gemini-2.5-flash",
-    instruction="""You are a helpful assistant that can check the weather and manage todos.
+    instruction="""You are a helpful assistant that can check the weather, manage todos, and create plans.
     Be concise and friendly. When the user asks about weather, use the get_weather tool.
-    When they want to add a task, use the add_todo tool.""",
-    description="A helpful assistant with weather and todo capabilities.",
-    tools=[get_weather, add_todo],
+    When they want to add a task, use the add_todo tool.
+    When the user asks you to create a plan, outline, roadmap, or strategy, use the create_plan tool.
+    Write the plan content as well-structured markdown with headings, bullet points, and numbered lists.""",
+    description="A helpful assistant with weather, todo, and planning capabilities.",
+    tools=[get_weather, add_todo, create_plan],
 )

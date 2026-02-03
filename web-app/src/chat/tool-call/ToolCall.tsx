@@ -15,15 +15,23 @@ const getToolDisplayName = (name: string) => {
   return `${name}()`;
 };
 
+const truncate = (value: string, maxLen = 80) =>
+  value.length > maxLen ? `${value.slice(0, maxLen)}…` : value;
+
 const getToolArgs = (args: string) => {
   try {
     const parsed = JSON.parse(args);
     if (typeof parsed === "object") {
-      return Object.values(parsed).join(", ");
+      return Object.entries(parsed)
+        .map(([key, val]) => {
+          const strVal = typeof val === "string" ? val : JSON.stringify(val);
+          return `${key}: ${truncate(strVal)}`;
+        })
+        .join(", ");
     }
-    return args;
+    return truncate(args);
   } catch {
-    return args;
+    return truncate(args);
   }
 };
 
