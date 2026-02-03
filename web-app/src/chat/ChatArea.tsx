@@ -41,6 +41,11 @@ export function ChatArea() {
   const isLoading = agent.isRunning;
   const plan = agent.state?.plan ?? null;
 
+  const handlePlanSave = (updatedContent: string) => {
+    const updatedPlan = { ...plan, content: updatedContent };
+    agent.setState({ ...agent.state, plan: updatedPlan });
+  };
+
   return (
     <div className="flex-1 flex flex-col h-full">
       {/* Header */}
@@ -79,7 +84,11 @@ export function ChatArea() {
       />
 
       {isPlanModalOpen && plan && (
-        <PlanModal plan={plan} onClose={() => setIsPlanModalOpen(false)} />
+        <PlanModal
+          plan={plan}
+          onClose={() => setIsPlanModalOpen(false)}
+          onSave={handlePlanSave}
+        />
       )}
     </div>
   );

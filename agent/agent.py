@@ -1,5 +1,6 @@
 from google import genai
 from google.adk.agents import Agent
+from google.adk.agents.readonly_context import ReadonlyContext
 from google.adk.tools import ToolContext
 
 
@@ -56,15 +57,34 @@ async def create_plan(
     return {"status": "success", "message": f"Plan '{title}' created (v{version})"}
 
 
+def build_instruction(context: ReadonlyContext) -> str:
+    """Build the agent instruction dynamically, injecting the current plan from session state."""
+    base = """You are a helpful assistant that can check the weather, manage todos, and create plans.
+Be concise and friendly. When the user asks about weather, use the get_weather tool.
+When they want to add a task, use the add_todo tool.
+When the user asks you to create a plan, outline, roadmap, or strategy, use the create_plan tool.
+Write the plan content as well-structured markdown with headings, bullet points, and numbered lists.
+The user may edit the plan directly in the UI canvas. If they mention changes to the plan,
+compare their current plan content below with what you last generated to identify what changed."""
+
+    plan = context.state.get("plan")
+    if plan and isinstance(plan, dict) and plan.get("content"):
+        base += f"""
+
+## Current Plan (from session state)
+Title: {plan.get("title", "Untitled")}
+Version: {plan.get("version", 0)}
+
+{plan["content"]}"""
+
+    return base
+
+
 # Define the root agent
 root_agent = Agent(
     name="personal_assistant_agent",
     model="gemini-2.5-flash",
-    instruction="""You are a helpful assistant that can check the weather, manage todos, and create plans.
-    Be concise and friendly. When the user asks about weather, use the get_weather tool.
-    When they want to add a task, use the add_todo tool.
-    When the user asks you to create a plan, outline, roadmap, or strategy, use the create_plan tool.
-    Write the plan content as well-structured markdown with headings, bullet points, and numbered lists.""",
+    instruction=build_instruction,
     description="A helpful assistant with weather, todo, and planning capabilities.",
     tools=[get_weather, add_todo, create_plan],
 )
